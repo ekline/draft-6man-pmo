@@ -69,7 +69,9 @@ Internet-Draft             IPv6 PathMTU Option                 July 2019
    a higher MTU for on-link or intra-administrative-domain
    communications than for broader Internet communications.
 
-2.  Requirements Language
+2.  Terminology
+
+2.1.  Requirements Language
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -77,17 +79,24 @@ Internet-Draft             IPv6 PathMTU Option                 July 2019
    14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
+2.2.  Summary of key terms
+
+   Path MTU Path MTU Discovery MTU Option [RFC4861] Path MTU Option
+   (this document)
+
 3.  Option Format
 
-   Any IPv6 link-local prefixes listed within a PathMTU Option MUST be
-   ignored and SHOULD be logged for review by an administrator.
+   XXX Any IPv6 link-local prefixes listed within a PathMTU Option MUST
+   be ignored and SHOULD be logged for review by an administrator.
 
 4.  Receiver Processing Rules
 
    Nodes compliant with this specification do not change their
    processing of RAs that contain no PathMTU Options.  Whether the RA
    contains an MTU Option or not, the processing is unaltered by this
-   document.
+   document.  Additionaly, for all Path MTU determination an effective
+   Path MTU learned via a Path MTU Discovery mechanism ([RFC8201]) MUST
+   take precedence.
 
    Any MTU value lower than the IPv6 minimum MTU (i.e. 1280, [RFC8200]
    section 5 [1]), SHOULD be logged for an administrator as a
@@ -99,16 +108,7 @@ Internet-Draft             IPv6 PathMTU Option                 July 2019
    Option, a value specified in a separate document that covers
    operating IP over a particular link type (e.g., [RFC2464]), or
    derived by other means (e.g.  administrative or a hint from a sub-IP
-   layer mechanism).  The Link MTU MUST be used for all link-local
-   destinations.
 
-5.  notes
-
-   IPv6 Router Advertisement Path MTU Option TLV Type = TBD Length =
-   units of 8 octets, including TL bytes, with zero padding at the end
-   as required { 4 byte MTU, 1 byte # of prefixes, [ { 1 byte of
-   prefixlen, 0-16 bytes of prefix address, trailing zeros dropped },
-   ...  ] } { 4 byte MTU, 1 byte # of prefixes, [ { 1 byte of prefixlen,
 
 
 
@@ -117,6 +117,34 @@ Kline                    Expires January 8, 2020                [Page 2]
 Internet-Draft             IPv6 PathMTU Option                 July 2019
 
 
+   layer mechanism).  The Link MTU MUST be used for all link-local
+   destinations.
+
+   The Link MTU SHOULD also be used for all on-link destinations, to
+   maintain compatibility with existing behavior and expectations.  For
+   the same reason, the Link MTU SHOULD be used for destinations within
+   any PIO prefix in the RA, even if the L bit is not set.  As noted in
+   [RFC5942], a destination may at some time be learned to be on-link,
+   and this information may expire or be changed.
+
+   For all other destinations, an initial Path MTU SHOULD be determined
+   by first looking for a prefix that includes the destination in a Path
+   MTU Option and using the corresponding MTU value.  If no such prefix
+   exists, the Link MTU SHOULD be assumed to be the default.
+
+   Note that as a matter of convenience a Path MTU Option may contain an
+   entry for ::/0 even when the router lifetime is zero.  This in no way
+   indicates that the router will function as a default gateway.
+   Rather, it may be used to apply a Path MTU to all prefixes listed in
+   an RIO (for example).
+
+5.  notes
+
+   IPv6 Router Advertisement Path MTU Option TLV Type = TBD Length =
+   units of 8 octets, including TL bytes, with zero padding at the end
+   as required { 4 byte MTU, 1 byte # of prefixes, [ { 1 byte of
+   prefixlen, 0-16 bytes of prefix address, trailing zeros dropped },
+   ...  ] } { 4 byte MTU, 1 byte # of prefixes, [ { 1 byte of prefixlen,
    0-16 bytes of prefix address, trailing zeros dropped }, ...  ] } MTUs
    less than IPv6 min MTU must be ignored and treated as 1280.  Regular
    MTU option applies to on-link destinations.  In environments where
@@ -135,22 +163,23 @@ Internet-Draft             IPv6 PathMTU Option                 July 2019
    PIO 2001:db8:1:2::/64 RA PathMTU - 1500, 1, 0, - 9000, 1, 48,
    2001:db8:1::: [3] RA MTU 1422 PIO 2001:db8:1:2::/64 RA PathMTU -
    9000, 2, 64, fe80::, 64, 2001:db8:1:2:: 9k to 2001:db8:1::/48,
-   fe80::/10, and ff02::/16 1500 to ::/0 Implementations compliant with
-   this document interpret the PathMTU option in the following way: [2]
-   The original MTU option (if present), or the hardware-defined MTU if
-   not, SHALL be interpreted as the MTU for on-link destinations.  If
-   the RA has a non-zero default router lifetime (i.e. it advertises
-   itself as a default router) and there is no zero CIDR length route in
-   the PathMTU option (or the PathMTU option is absent) this MTU SHALL
-   also be used for all [2] If a PathMTU value is found for a given
-   destination according to the lookup and parse rules of section (ref),
-   this PathMTU option MUST be honored when using the advertising router
-   as the next hop (subject to other device- or interface-specific
-   constraints).  [3] A [RFC4861]
+   fe80::/10, and ff02::/16 1500 to ::/0
 
-6.  References
 
-6.1.  Normative References
+
+
+Kline                    Expires January 8, 2020                [Page 3]
+
+Internet-Draft             IPv6 PathMTU Option                 July 2019
+
+
+6.  Security Considerations
+
+   TBD
+
+7.  References
+
+7.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -166,27 +195,39 @@ Internet-Draft             IPv6 PathMTU Option                 July 2019
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
-
-
-Kline                    Expires January 8, 2020                [Page 3]
-
-Internet-Draft             IPv6 PathMTU Option                 July 2019
-
-
    [RFC8200]  Deering, S. and R. Hinden, "Internet Protocol, Version 6
               (IPv6) Specification", STD 86, RFC 8200,
               DOI 10.17487/RFC8200, July 2017, <https://www.rfc-
               editor.org/info/rfc8200>.
 
-6.2.  Informative References
+   [RFC8201]  McCann, J., Deering, S., Mogul, J., and R. Hinden, Ed.,
+              "Path MTU Discovery for IP version 6", STD 87, RFC 8201,
+              DOI 10.17487/RFC8201, July 2017, <https://www.rfc-
+              editor.org/info/rfc8201>.
+
+7.2.  Informative References
 
    [RFC2464]  Crawford, M., "Transmission of IPv6 Packets over Ethernet
               Networks", RFC 2464, DOI 10.17487/RFC2464, December 1998,
               <https://www.rfc-editor.org/info/rfc2464>.
 
-6.3.  URIs
+   [RFC5942]  Singh, H., Beebee, W., and E. Nordmark, "IPv6 Subnet
+              Model: The Relationship between Links and Subnet
+              Prefixes", RFC 5942, DOI 10.17487/RFC5942, July 2010,
+              <https://www.rfc-editor.org/info/rfc5942>.
+
+7.3.  URIs
 
    [1] https://tools.ietf.org/html/rfc8200#section-5
+
+
+
+
+
+Kline                    Expires January 8, 2020                [Page 4]
+
+Internet-Draft             IPv6 PathMTU Option                 July 2019
+
 
 Author's Address
 
@@ -224,5 +265,20 @@ Author's Address
 
 
 
-Kline                    Expires January 8, 2020                [Page 4]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Kline                    Expires January 8, 2020                [Page 5]
 ```

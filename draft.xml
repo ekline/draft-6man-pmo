@@ -3,8 +3,10 @@
 <!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
 <!ENTITY RFC2464 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2464.xml">
 <!ENTITY RFC4861 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4861.xml">
+<!ENTITY RFC5942 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5942.xml">
 <!ENTITY RFC8174 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY RFC8200 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8200.xml">
+<!ENTITY RFC8201 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8201.xml">
 ]>
 
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
@@ -70,17 +72,28 @@ intra-administrative-domain communications than for broader Internet
 communications.
             </t>
         </section>
-        <section title="Requirements Language">
-            <t>
+        <section title="Terminology">
+            <section title="Requirements Language">
+                <t>
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
 NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
 "MAY", and "OPTIONAL" in this document are to be interpreted as
 described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/>
 when, and only when, they appear in all capitals, as shown here.
-            </t>
+                </t>
+            </section>
+            <section title="Summary of key terms">
+                <t>
+Path MTU
+Path MTU Discovery
+MTU Option <xref target="RFC4861"/>
+Path MTU Option (this document)
+                </t>
+            </section>
         </section>
         <section anchor="format" title="Option Format">
             <t>
+XXX
 Any IPv6 link-local prefixes listed within a PathMTU Option MUST be ignored
 and SHOULD be logged for review by an administrator.
             </t>
@@ -89,7 +102,10 @@ and SHOULD be logged for review by an administrator.
             <t>
 Nodes compliant with this specification do not change their processing of
 RAs that contain no PathMTU Options. Whether the RA contains an MTU
-Option or not, the processing is unaltered by this document.
+Option or not, the processing is unaltered by this document.  Additionaly,
+for all Path MTU determination an effective Path MTU learned via a
+Path MTU Discovery mechanism (<xref target="RFC8201"/>) MUST take
+precedence.
             </t>
             <t>
 Any MTU value lower than the IPv6 minimum MTU (i.e. 1280,
@@ -105,6 +121,26 @@ in a separate document that covers operating IP over a particular link type
 (e.g., <xref target="RFC2464"/>), or derived by other means (e.g.
 administrative or a hint from a sub-IP layer mechanism). The Link MTU MUST be
 used for all link-local destinations.
+            </t>
+            <t>
+The Link MTU SHOULD also be used for all on-link destinations, to maintain
+compatibility with existing behavior and expectations. For the same reason,
+the Link MTU SHOULD be used for destinations within any PIO prefix in the RA,
+even if the L bit is not set. As noted in <xref target="RFC5942"/>, a
+destination may at some time be learned to be on-link, and this information
+may expire or be changed.
+            </t>
+            <t>
+For all other destinations, an initial Path MTU SHOULD be determined by first
+looking for a prefix that includes the destination in a Path MTU Option and
+using the corresponding MTU value.  If no such prefix exists, the Link MTU
+SHOULD be assumed to be the default.
+            </t>
+            <t>
+Note that as a matter of convenience a Path MTU Option may contain an entry
+for ::/0 even when the router lifetime is zero.  This in no way indicates
+that the router will function as a default gateway. Rather, it may be used
+to apply a Path MTU to all prefixes listed in an RIO (for example).
             </t>
         </section>
         <section title="notes">
@@ -169,24 +205,10 @@ and 1422 for all other destinations.
 
 9k to 2001:db8:1::/48, fe80::/10, and ff02::/16
 1500 to ::/0
-
-Implementations compliant with this document interpret the PathMTU option
-in the following way:
-
-[2] The original MTU option (if present), or the hardware-defined MTU if not,
-SHALL be interpreted as the MTU for on-link destinations. If the RA has a
-non-zero default router lifetime (i.e. it advertises itself as a default
-router) and there is no zero CIDR length route in the PathMTU option (or the
-PathMTU option is absent) this MTU SHALL also be used for all
-
-[2] If a PathMTU value is found for a given destination according to the
-lookup and parse rules of section (ref), this PathMTU option MUST be honored
-when using the advertising router as the next hop (subject to other device-
-or interface-specific constraints).
-
-[3] A
-<xref target="RFC4861"/>
 </t>
+        </section>
+        <section title="Security Considerations">
+            <t>TBD</t>
         </section>
     </middle>
 
@@ -196,9 +218,11 @@ or interface-specific constraints).
             &RFC4861;
             &RFC8174;
             &RFC8200;
+            &RFC8201;
         </references>
         <references title="Informative References">
             &RFC2464;
+            &RFC5942;
         </references>
     </back>
 </rfc>

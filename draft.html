@@ -375,17 +375,20 @@
 
   <link href="#rfc.toc" rel="Contents"/>
 <link href="#rfc.section.1" rel="Chapter" title="1 Introduction"/>
-<link href="#rfc.section.2" rel="Chapter" title="2 Requirements Language"/>
+<link href="#rfc.section.2" rel="Chapter" title="2 Terminology"/>
+<link href="#rfc.section.2.1" rel="Chapter" title="2.1 Requirements Language"/>
+<link href="#rfc.section.2.2" rel="Chapter" title="2.2 Summary of key terms"/>
 <link href="#rfc.section.3" rel="Chapter" title="3 Option Format"/>
 <link href="#rfc.section.4" rel="Chapter" title="4 Receiver Processing Rules"/>
 <link href="#rfc.section.5" rel="Chapter" title="5 notes"/>
-<link href="#rfc.references" rel="Chapter" title="6 References"/>
-<link href="#rfc.references.1" rel="Chapter" title="6.1 Normative References"/>
-<link href="#rfc.references.2" rel="Chapter" title="6.2 Informative References"/>
+<link href="#rfc.section.6" rel="Chapter" title="6 Security Considerations"/>
+<link href="#rfc.references" rel="Chapter" title="7 References"/>
+<link href="#rfc.references.1" rel="Chapter" title="7.1 Normative References"/>
+<link href="#rfc.references.2" rel="Chapter" title="7.2 Informative References"/>
 <link href="#rfc.authors" rel="Chapter"/>
 
 
-  <meta name="generator" content="xml2rfc version 2.5.1 - http://tools.ietf.org/tools/xml2rfc" />
+  <meta name="generator" content="xml2rfc version 2.5.2 - http://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Kline, E." />
@@ -443,18 +446,26 @@
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
 <h1 id="rfc.section.1"><a href="#rfc.section.1">1.</a> Introduction</h1>
 <p id="rfc.section.1.p.1">This document describes an IPv6 Neighbor Discovery (ND) PathMTU Option (PMO) for inclusion in Router Advertisements (RAs). This allows some environments greater flexibility to support, for example, a higher MTU for on-link or intra-administrative-domain communications than for broader Internet communications.  </p>
-<h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> Requirements Language</h1>
-<p id="rfc.section.2.p.1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 <a href="#RFC2119">[RFC2119]</a> <a href="#RFC8174">[RFC8174]</a> when, and only when, they appear in all capitals, as shown here.  </p>
+<h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> Terminology</h1>
+<h1 id="rfc.section.2.1"><a href="#rfc.section.2.1">2.1.</a> Requirements Language</h1>
+<p id="rfc.section.2.1.p.1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 <a href="#RFC2119">[RFC2119]</a> <a href="#RFC8174">[RFC8174]</a> when, and only when, they appear in all capitals, as shown here.  </p>
+<h1 id="rfc.section.2.2"><a href="#rfc.section.2.2">2.2.</a> Summary of key terms</h1>
+<p id="rfc.section.2.2.p.1">Path MTU Path MTU Discovery MTU Option <a href="#RFC4861">[RFC4861]</a> Path MTU Option (this document) </p>
 <h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#format" id="format">Option Format</a></h1>
-<p id="rfc.section.3.p.1">Any IPv6 link-local prefixes listed within a PathMTU Option MUST be ignored and SHOULD be logged for review by an administrator.  </p>
+<p id="rfc.section.3.p.1">XXX Any IPv6 link-local prefixes listed within a PathMTU Option MUST be ignored and SHOULD be logged for review by an administrator.  </p>
 <h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#processing" id="processing">Receiver Processing Rules</a></h1>
-<p id="rfc.section.4.p.1">Nodes compliant with this specification do not change their processing of RAs that contain no PathMTU Options. Whether the RA contains an MTU Option or not, the processing is unaltered by this document.  </p>
+<p id="rfc.section.4.p.1">Nodes compliant with this specification do not change their processing of RAs that contain no PathMTU Options. Whether the RA contains an MTU Option or not, the processing is unaltered by this document.  Additionaly, for all Path MTU determination an effective Path MTU learned via a Path MTU Discovery mechanism (<a href="#RFC8201">[RFC8201]</a>) MUST take precedence.  </p>
 <p id="rfc.section.4.p.2">Any MTU value lower than the IPv6 minimum MTU (i.e. 1280, <a href="#RFC8200">[RFC8200]</a> <a href="https://tools.ietf.org/html/rfc8200#section-5">section 5</a>), SHOULD be logged for an administrator as a configuration error and MUST be treated as though the IPv6 minimum MTU had been the encoded value.  </p>
 <p id="rfc.section.4.p.3">Let the "Link MTU" be the MTU as it would be determined were no PathMTU Option present. This may be: the value specified in an MTU Option, a value specified in a separate document that covers operating IP over a particular link type (e.g., <a href="#RFC2464">[RFC2464]</a>), or derived by other means (e.g.  administrative or a hint from a sub-IP layer mechanism). The Link MTU MUST be used for all link-local destinations.  </p>
+<p id="rfc.section.4.p.4">The Link MTU SHOULD also be used for all on-link destinations, to maintain compatibility with existing behavior and expectations. For the same reason, the Link MTU SHOULD be used for destinations within any PIO prefix in the RA, even if the L bit is not set. As noted in <a href="#RFC5942">[RFC5942]</a>, a destination may at some time be learned to be on-link, and this information may expire or be changed.  </p>
+<p id="rfc.section.4.p.5">For all other destinations, an initial Path MTU SHOULD be determined by first looking for a prefix that includes the destination in a Path MTU Option and using the corresponding MTU value.  If no such prefix exists, the Link MTU SHOULD be assumed to be the default.  </p>
+<p id="rfc.section.4.p.6">Note that as a matter of convenience a Path MTU Option may contain an entry for ::/0 even when the router lifetime is zero.  This in no way indicates that the router will function as a default gateway. Rather, it may be used to apply a Path MTU to all prefixes listed in an RIO (for example).  </p>
 <h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> notes</h1>
-<p id="rfc.section.5.p.1">IPv6 Router Advertisement Path MTU Option TLV Type = TBD Length = units of 8 octets, including TL bytes, with zero padding at the end as required { 4 byte MTU, 1 byte # of prefixes, [ { 1 byte of prefixlen, 0-16 bytes of prefix address, trailing zeros dropped }, ...  ] } { 4 byte MTU, 1 byte # of prefixes, [ { 1 byte of prefixlen, 0-16 bytes of prefix address, trailing zeros dropped }, ...  ] } MTUs less than IPv6 min MTU must be ignored and treated as 1280.  Regular MTU option applies to on-link destinations.  In environments where on-link nodes do not communicate with one another, either by policy or by practice, setting the MTU option value to the path MTU value for all destinations through the advertising router is a practical measure. In other words, since there is no on-link communication of note, supporting higher MTUs for on-link destinations is of no operational value, especially when not doing so can burden hosts with endless PathMTU discovery.  However, even in these environments there may be changes in Path MTU (e.g.  a change in upstream provider to one with a lower MTU). It can still be operationally useful to separate the Path MTU from the on-link MTU.  Examples: [1] RA MTU 1500 RA PathMTU - 1422, 1, 0 1500 on-link (fe80::/10, ff02::/16, and 2001:db8::/64), and 1422 for all other destinations.  [2] RA MTU 9000 PIO 2001:db8:1:2::/64 RA PathMTU - 1500, 1, 0, - 9000, 1, 48, 2001:db8:1::: [3] RA MTU 1422 PIO 2001:db8:1:2::/64 RA PathMTU - 9000, 2, 64, fe80::, 64, 2001:db8:1:2:: 9k to 2001:db8:1::/48, fe80::/10, and ff02::/16 1500 to ::/0 Implementations compliant with this document interpret the PathMTU option in the following way: [2] The original MTU option (if present), or the hardware-defined MTU if not, SHALL be interpreted as the MTU for on-link destinations. If the RA has a non-zero default router lifetime (i.e. it advertises itself as a default router) and there is no zero CIDR length route in the PathMTU option (or the PathMTU option is absent) this MTU SHALL also be used for all [2] If a PathMTU value is found for a given destination according to the lookup and parse rules of section (ref), this PathMTU option MUST be honored when using the advertising router as the next hop (subject to other device- or interface-specific constraints).  [3] A <a href="#RFC4861">[RFC4861]</a> </p>
-<h1 id="rfc.references"><a href="#rfc.references">6.</a> References</h1>
-<h1 id="rfc.references.1"><a href="#rfc.references.1">6.1.</a> Normative References</h1>
+<p id="rfc.section.5.p.1">IPv6 Router Advertisement Path MTU Option TLV Type = TBD Length = units of 8 octets, including TL bytes, with zero padding at the end as required { 4 byte MTU, 1 byte # of prefixes, [ { 1 byte of prefixlen, 0-16 bytes of prefix address, trailing zeros dropped }, ...  ] } { 4 byte MTU, 1 byte # of prefixes, [ { 1 byte of prefixlen, 0-16 bytes of prefix address, trailing zeros dropped }, ...  ] } MTUs less than IPv6 min MTU must be ignored and treated as 1280.  Regular MTU option applies to on-link destinations.  In environments where on-link nodes do not communicate with one another, either by policy or by practice, setting the MTU option value to the path MTU value for all destinations through the advertising router is a practical measure. In other words, since there is no on-link communication of note, supporting higher MTUs for on-link destinations is of no operational value, especially when not doing so can burden hosts with endless PathMTU discovery.  However, even in these environments there may be changes in Path MTU (e.g.  a change in upstream provider to one with a lower MTU). It can still be operationally useful to separate the Path MTU from the on-link MTU.  Examples: [1] RA MTU 1500 RA PathMTU - 1422, 1, 0 1500 on-link (fe80::/10, ff02::/16, and 2001:db8::/64), and 1422 for all other destinations.  [2] RA MTU 9000 PIO 2001:db8:1:2::/64 RA PathMTU - 1500, 1, 0, - 9000, 1, 48, 2001:db8:1::: [3] RA MTU 1422 PIO 2001:db8:1:2::/64 RA PathMTU - 9000, 2, 64, fe80::, 64, 2001:db8:1:2:: 9k to 2001:db8:1::/48, fe80::/10, and ff02::/16 1500 to ::/0 </p>
+<h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> Security Considerations</h1>
+<p id="rfc.section.6.p.1">TBD</p>
+<h1 id="rfc.references"><a href="#rfc.references">7.</a> References</h1>
+<h1 id="rfc.references.1"><a href="#rfc.references.1">7.1.</a> Normative References</h1>
 <table>
   <tbody>
     <tr>
@@ -481,9 +492,15 @@
       </td>
       <td class="top"><a>Deering, S.</a> and <a>R. Hinden</a>, "<a href="http://tools.ietf.org/html/rfc8200">Internet Protocol, Version 6 (IPv6) Specification</a>", STD 86, RFC 8200, DOI 10.17487/RFC8200, July 2017.</td>
     </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC8201">[RFC8201]</b>
+      </td>
+      <td class="top"><a>McCann, J.</a>, <a>Deering, S.</a>, <a>Mogul, J.</a> and <a>R. Hinden</a>, "<a href="http://tools.ietf.org/html/rfc8201">Path MTU Discovery for IP version 6</a>", STD 87, RFC 8201, DOI 10.17487/RFC8201, July 2017.</td>
+    </tr>
   </tbody>
 </table>
-<h1 id="rfc.references.2"><a href="#rfc.references.2">6.2.</a> Informative References</h1>
+<h1 id="rfc.references.2"><a href="#rfc.references.2">7.2.</a> Informative References</h1>
 <table>
   <tbody>
     <tr>
@@ -491,6 +508,12 @@
         <b id="RFC2464">[RFC2464]</b>
       </td>
       <td class="top"><a>Crawford, M.</a>, "<a href="http://tools.ietf.org/html/rfc2464">Transmission of IPv6 Packets over Ethernet Networks</a>", RFC 2464, DOI 10.17487/RFC2464, December 1998.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC5942">[RFC5942]</b>
+      </td>
+      <td class="top"><a>Singh, H.</a>, <a>Beebee, W.</a> and <a>E. Nordmark</a>, "<a href="http://tools.ietf.org/html/rfc5942">IPv6 Subnet Model: The Relationship between Links and Subnet Prefixes</a>", RFC 5942, DOI 10.17487/RFC5942, July 2010.</td>
     </tr>
   </tbody>
 </table>
@@ -526,13 +549,16 @@
   <ul class="toc">
 
   	<li>1.   <a href="#rfc.section.1">Introduction</a></li>
-<li>2.   <a href="#rfc.section.2">Requirements Language</a></li>
-<li>3.   <a href="#rfc.section.3">Option Format</a></li>
+<li>2.   <a href="#rfc.section.2">Terminology</a></li>
+<ul><li>2.1.   <a href="#rfc.section.2.1">Requirements Language</a></li>
+<li>2.2.   <a href="#rfc.section.2.2">Summary of key terms</a></li>
+</ul><li>3.   <a href="#rfc.section.3">Option Format</a></li>
 <li>4.   <a href="#rfc.section.4">Receiver Processing Rules</a></li>
 <li>5.   <a href="#rfc.section.5">notes</a></li>
-<li>6.   <a href="#rfc.references">References</a></li>
-<ul><li>6.1.   <a href="#rfc.references.1">Normative References</a></li>
-<li>6.2.   <a href="#rfc.references.2">Informative References</a></li>
+<li>6.   <a href="#rfc.section.6">Security Considerations</a></li>
+<li>7.   <a href="#rfc.references">References</a></li>
+<ul><li>7.1.   <a href="#rfc.references.1">Normative References</a></li>
+<li>7.2.   <a href="#rfc.references.2">Informative References</a></li>
 </ul><li><a href="#rfc.authors">Author's Address</a></li>
 
 
