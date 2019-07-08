@@ -47,13 +47,14 @@
         <keyword>RA</keyword>
         <keyword>Router</keyword>
         <keyword>Advertisement</keyword>
-        <keyword>PathMTU</keyword>
+        <keyword>Path</keyword>
         <keyword>MTU</keyword>
+        <keyword>Path MTU</keyword>
         <keyword>Option</keyword>
 
         <abstract>
             <t>
-This document describes an IPv6 Neighbor Discovery (ND) PathMTU Option (PMO)
+This document describes an IPv6 Neighbor Discovery (ND) Path MTU Option (PMO)
 for inclusion in Router Advertisements (RAs). This allows some environments
 greater flexibility to support, for example, a higher MTU for on-link or
 intra-administrative-domain communications than for broader Internet
@@ -65,7 +66,7 @@ communications.
     <middle>
         <section title="Introduction">
             <t>
-This document describes an IPv6 Neighbor Discovery (ND) PathMTU Option (PMO)
+This document describes an IPv6 Neighbor Discovery (ND) Path MTU Option (PMO)
 for inclusion in Router Advertisements (RAs). This allows some environments
 greater flexibility to support, for example, a higher MTU for on-link or
 intra-administrative-domain communications than for broader Internet
@@ -78,7 +79,7 @@ either by policy or by practice, setting the MTU option value to the path MTU
 value for all destinations through the advertising router is a practical
 measure. In other words, since there is no on-link communication of note,
 supporting higher MTUs for on-link destinations is of no operational value,
-especially when not doing so can burden hosts with endless PathMTU discovery.
+especially when not doing so can burden hosts with endless Path MTU discovery.
 
 However, even in these environments there may be changes in Path MTU (e.g.
 a change in upstream provider to one with a lower MTU). It can still be
@@ -88,6 +89,7 @@ operationally useful to separate the Path MTU from the on-link MTU.
             <t>
 TBD: Explain why extending RFC4191 RIOs didn't look easy.
             </t>
+            <t>TBD: more discussion</t>
         </section>
         <section title="Terminology">
             <section title="Requirements Language">
@@ -147,8 +149,8 @@ disambiguate it from this the
                 <section anchor="path_mtu_option" title="Path MTU Option">
                     <t>
 The IPv6 ND Path MTU Option is described in this document. It provides more
-explicit signaling of the best initial Path MTU for given set of destinations
-when sending via the advertising router.
+explicit signaling of the best initial Path MTU value for a given set of
+destinations when sending via the advertising router.
                     </t>
                 </section>
             </section>
@@ -229,7 +231,7 @@ determination, an effective Path MTU learned via a Path MTU Discovery mechanism
 (<xref target="RFC8201"/>) MUST take precedence.
             </t>
             <t>
-Any IPv6 link-local prefixes listed within a PathMTU Option MUST be ignored
+Any IPv6 link-local prefixes listed within a Path MTU Option MUST be ignored
 by the receiver and SHOULD be logged for review by an administrator.
             </t>
             <t>
@@ -261,10 +263,11 @@ for example, to apply a Path MTU to all prefixes listed in a set of RIOs.
             </t>
         </section>
         <section anchor="examples" title="Examples">
+            <t>TBD</t>
             <t>
 <!--
 [1] RA MTU 1500
-    RA PathMTU
+    RA Path MTU
       - 1422, 1, 0
 
 1500 on-link (fe80::/10, ff02::/16, and 2001:db8::/64),
@@ -272,13 +275,13 @@ and 1422 for all other destinations.
 
 [2] RA MTU 9000
     PIO 2001:db8:1:2::/64
-    RA PathMTU
+    RA Path MTU
       - 1500, 1, 0,
       - 9000, 1, 48, 2001:db8:1:::
 
 [3] RA MTU 1422
     PIO 2001:db8:1:2::/64
-    RA PathMTU
+    RA Path MTU
       - 9000, 2, 64, fe80::,
                  64, 2001:db8:1:2::
 

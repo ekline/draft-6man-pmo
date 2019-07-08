@@ -399,8 +399,8 @@
   <meta name="dct.creator" content="Kline, E." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-kline-6man-pmo-00" />
   <meta name="dct.issued" scheme="ISO8601" content="2019-7-8" />
-  <meta name="dct.abstract" content="This document describes an IPv6 Neighbor Discovery (ND) PathMTU Option (PMO) for inclusion in Router Advertisements (RAs). This allows some environments greater flexibility to support, for example, a higher MTU for on-link or intra-administrative-domain communications than for broader Internet communications.  " />
-  <meta name="description" content="This document describes an IPv6 Neighbor Discovery (ND) PathMTU Option (PMO) for inclusion in Router Advertisements (RAs). This allows some environments greater flexibility to support, for example, a higher MTU for on-link or intra-administrative-domain communications than for broader Internet communications.  " />
+  <meta name="dct.abstract" content="This document describes an IPv6 Neighbor Discovery (ND) Path MTU Option (PMO) for inclusion in Router Advertisements (RAs). This allows some environments greater flexibility to support, for example, a higher MTU for on-link or intra-administrative-domain communications than for broader Internet communications.  " />
+  <meta name="description" content="This document describes an IPv6 Neighbor Discovery (ND) Path MTU Option (PMO) for inclusion in Router Advertisements (RAs). This allows some environments greater flexibility to support, for example, a higher MTU for on-link or intra-administrative-domain communications than for broader Internet communications.  " />
 
 </head>
 
@@ -436,7 +436,7 @@
   <h1 id="rfc.abstract">
   <a href="#rfc.abstract">Abstract</a>
 </h1>
-<p>This document describes an IPv6 Neighbor Discovery (ND) PathMTU Option (PMO) for inclusion in Router Advertisements (RAs). This allows some environments greater flexibility to support, for example, a higher MTU for on-link or intra-administrative-domain communications than for broader Internet communications.  </p>
+<p>This document describes an IPv6 Neighbor Discovery (ND) Path MTU Option (PMO) for inclusion in Router Advertisements (RAs). This allows some environments greater flexibility to support, for example, a higher MTU for on-link or intra-administrative-domain communications than for broader Internet communications.  </p>
 <h1 id="rfc.status">
   <a href="#rfc.status">Status of This Memo</a>
 </h1>
@@ -450,8 +450,9 @@
 <p>Copyright (c) 2019 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
 <h1 id="rfc.section.1"><a href="#rfc.section.1">1.</a> Introduction</h1>
-<p id="rfc.section.1.p.1">This document describes an IPv6 Neighbor Discovery (ND) PathMTU Option (PMO) for inclusion in Router Advertisements (RAs). This allows some environments greater flexibility to support, for example, a higher MTU for on-link or intra-administrative-domain communications than for broader Internet communications.  </p>
+<p id="rfc.section.1.p.1">This document describes an IPv6 Neighbor Discovery (ND) Path MTU Option (PMO) for inclusion in Router Advertisements (RAs). This allows some environments greater flexibility to support, for example, a higher MTU for on-link or intra-administrative-domain communications than for broader Internet communications.  </p>
 <p id="rfc.section.1.p.2">TBD: Explain why extending RFC4191 RIOs didn't look easy.  </p>
+<p id="rfc.section.1.p.3">TBD: more discussion</p>
 <h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> Terminology</h1>
 <h1 id="rfc.section.2.1"><a href="#rfc.section.2.1">2.1.</a> Requirements Language</h1>
 <p id="rfc.section.2.1.p.1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 <a href="#RFC2119">[RFC2119]</a> <a href="#RFC8174">[RFC8174]</a> when, and only when, they appear in all capitals, as shown here.  </p>
@@ -477,7 +478,7 @@
 <h1 id="rfc.section.2.2.4"><a href="#rfc.section.2.2.4">2.2.4.</a> <a href="#mtu_option" id="mtu_option">MTU Option</a></h1>
 <p id="rfc.section.2.2.4.p.1">The MTU Option is defined in <a href="#RFC4861">[RFC4861]</a> section 4.6.4. In this documented it may also be referred to as the Link MTU Option, in order to disambiguate it from this the <a href="#path_mtu_option">Path MTU Option</a> <cite title="NONE">[path_mtu_option]</cite>.  </p>
 <h1 id="rfc.section.2.2.5"><a href="#rfc.section.2.2.5">2.2.5.</a> <a href="#path_mtu_option" id="path_mtu_option">Path MTU Option</a></h1>
-<p id="rfc.section.2.2.5.p.1">The IPv6 ND Path MTU Option is described in this document. It provides more explicit signaling of the best initial Path MTU for given set of destinations when sending via the advertising router.  </p>
+<p id="rfc.section.2.2.5.p.1">The IPv6 ND Path MTU Option is described in this document. It provides more explicit signaling of the best initial Path MTU value for a given set of destinations when sending via the advertising router.  </p>
 <h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#format" id="format">Path MTU Option Format</a></h1>
 <pre>
  0                   1                   2                   3
@@ -566,12 +567,13 @@
 <p id="rfc.section.3.p.2">The option is padded with zero-valued octets to the 8 octet boundary as given by the option length.  </p>
 <h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#processing" id="processing">Option Processing Rules</a></h1>
 <p id="rfc.section.4.p.1">Nodes compliant with this specification do not change their processing of RAs that contain no Path MTU Options. Additionally, for all Path MTU determination, an effective Path MTU learned via a Path MTU Discovery mechanism (<a href="#RFC8201">[RFC8201]</a>) MUST take precedence.  </p>
-<p id="rfc.section.4.p.2">Any IPv6 link-local prefixes listed within a PathMTU Option MUST be ignored by the receiver and SHOULD be logged for review by an administrator.  </p>
+<p id="rfc.section.4.p.2">Any IPv6 link-local prefixes listed within a Path MTU Option MUST be ignored by the receiver and SHOULD be logged for review by an administrator.  </p>
 <p id="rfc.section.4.p.3">Any MTU value lower than the IPv6 minimum MTU (i.e. 1280, <a href="#RFC8200">[RFC8200]</a> section 5), SHOULD be logged for administrator review as a configuration error and MUST be treated by the receiver as though the IPv6 minimum MTU had been the encoded value.  </p>
 <p id="rfc.section.4.p.4">The Link MTU MUST also be used for all on-link destinations, to maintain compatibility with existing behavior and expectations. For the same reason, the Link MTU SHOULD be used for destinations within any PIO prefix in the RA, even if the L bit is not set. As noted in <a href="#RFC5942">[RFC5942]</a>, a destination may at some time be learned to be on-link, and this information may expire or be changed.  </p>
 <p id="rfc.section.4.p.5">For all other destinations considered reachable via the option's advertising router, an initial Path MTU SHOULD be determined by first looking for a prefix that includes the destination in a Path MTU Option and using the corresponding MTU value.  If no such prefix exists, the Link MTU SHOULD be assumed to be the default.  </p>
 <p id="rfc.section.4.p.6">Note that as a matter of convenience a Path MTU Option may contain an entry for ::/0 even when the router lifetime is zero.  This in no way indicates that the router will function as a default gateway. Rather, it may be used, for example, to apply a Path MTU to all prefixes listed in a set of RIOs.  </p>
 <h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#examples" id="examples">Examples</a></h1>
+<p id="rfc.section.5.p.1">TBD</p>
 <p/>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> Security Considerations</h1>
 <p id="rfc.section.6.p.1">TBD</p>

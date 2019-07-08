@@ -16,7 +16,7 @@ Expires: January 9, 2020
 
 Abstract
 
-   This document describes an IPv6 Neighbor Discovery (ND) PathMTU
+   This document describes an IPv6 Neighbor Discovery (ND) Path MTU
    Option (PMO) for inclusion in Router Advertisements (RAs).  This
    allows some environments greater flexibility to support, for example,
    a higher MTU for on-link or intra-administrative-domain
@@ -63,13 +63,15 @@ Internet-Draft            IPv6 Path MTU Option                 July 2019
 
 1.  Introduction
 
-   This document describes an IPv6 Neighbor Discovery (ND) PathMTU
+   This document describes an IPv6 Neighbor Discovery (ND) Path MTU
    Option (PMO) for inclusion in Router Advertisements (RAs).  This
    allows some environments greater flexibility to support, for example,
    a higher MTU for on-link or intra-administrative-domain
    communications than for broader Internet communications.
 
    TBD: Explain why extending RFC4191 RIOs didn't look easy.
+
+   TBD: more discussion
 
 2.  Terminology
 
@@ -103,9 +105,7 @@ Internet-Draft            IPv6 Path MTU Option                 July 2019
    The Link MTU MUST be the initial Path MTU used when transmitting to
    any link-local destination.
 
-2.2.2.  Path MTU
 
-   TBD: Path MTU
 
 
 
@@ -116,6 +116,10 @@ Kline                    Expires January 9, 2020                [Page 2]
 
 Internet-Draft            IPv6 Path MTU Option                 July 2019
 
+
+2.2.2.  Path MTU
+
+   TBD: Path MTU
 
 2.2.3.  Path MTU Discovery
 
@@ -131,8 +135,9 @@ Internet-Draft            IPv6 Path MTU Option                 July 2019
 2.2.5.  Path MTU Option
 
    The IPv6 ND Path MTU Option is described in this document.  It
-   provides more explicit signaling of the best initial Path MTU for
-   given set of destinations when sending via the advertising router.
+   provides more explicit signaling of the best initial Path MTU value
+   for a given set of destinations when sending via the advertising
+   router.
 
 3.  Path MTU Option Format
 
@@ -151,6 +156,23 @@ Internet-Draft            IPv6 Path MTU Option                 July 2019
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+Kline                    Expires January 9, 2020                [Page 3]
+
+Internet-Draft            IPv6 Path MTU Option                 July 2019
+
+
    Fields:
 
    Type       TBD
@@ -165,13 +187,6 @@ Internet-Draft            IPv6 Path MTU Option                 July 2019
    contents
 
    The Path MTU Option contents are encoded as a repeated sequence of:
-
-
-
-Kline                    Expires January 9, 2020                [Page 3]
-
-Internet-Draft            IPv6 Path MTU Option                 July 2019
-
 
       4-octet MTU value
 
@@ -200,12 +215,20 @@ Internet-Draft            IPv6 Path MTU Option                 July 2019
    for all Path MTU determination, an effective Path MTU learned via a
    Path MTU Discovery mechanism ([RFC8201]) MUST take precedence.
 
-   Any IPv6 link-local prefixes listed within a PathMTU Option MUST be
+   Any IPv6 link-local prefixes listed within a Path MTU Option MUST be
    ignored by the receiver and SHOULD be logged for review by an
    administrator.
 
    Any MTU value lower than the IPv6 minimum MTU (i.e. 1280, [RFC8200]
    section 5), SHOULD be logged for administrator review as a
+
+
+
+Kline                    Expires January 9, 2020                [Page 4]
+
+Internet-Draft            IPv6 Path MTU Option                 July 2019
+
+
    configuration error and MUST be treated by the receiver as though the
    IPv6 minimum MTU had been the encoded value.
 
@@ -222,13 +245,6 @@ Internet-Draft            IPv6 Path MTU Option                 July 2019
    Option and using the corresponding MTU value.  If no such prefix
    exists, the Link MTU SHOULD be assumed to be the default.
 
-
-
-Kline                    Expires January 9, 2020                [Page 4]
-
-Internet-Draft            IPv6 Path MTU Option                 July 2019
-
-
    Note that as a matter of convenience a Path MTU Option may contain an
    entry for ::/0 even when the router lifetime is zero.  This in no way
    indicates that the router will function as a default gateway.
@@ -236,6 +252,8 @@ Internet-Draft            IPv6 Path MTU Option                 July 2019
    prefixes listed in a set of RIOs.
 
 5.  Examples
+
+   TBD
 
 6.  Security Considerations
 
@@ -259,6 +277,14 @@ Internet-Draft            IPv6 Path MTU Option                 July 2019
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
+
+
+
+Kline                    Expires January 9, 2020                [Page 5]
+
+Internet-Draft            IPv6 Path MTU Option                 July 2019
+
+
    [RFC8200]  Deering, S. and R. Hinden, "Internet Protocol, Version 6
               (IPv6) Specification", STD 86, RFC 8200,
               DOI 10.17487/RFC8200, July 2017, <https://www.rfc-
@@ -275,16 +301,6 @@ Internet-Draft            IPv6 Path MTU Option                 July 2019
               Networks", RFC 2464, DOI 10.17487/RFC2464, December 1998,
               <https://www.rfc-editor.org/info/rfc2464>.
 
-
-
-
-
-
-Kline                    Expires January 9, 2020                [Page 5]
-
-Internet-Draft            IPv6 Path MTU Option                 July 2019
-
-
    [RFC5942]  Singh, H., Beebee, W., and E. Nordmark, "IPv6 Subnet
               Model: The Relationship between Links and Subnet
               Prefixes", RFC 5942, DOI 10.17487/RFC5942, July 2010,
@@ -299,22 +315,6 @@ Author's Address
    US
 
    Email: ek@loon.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
