@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC2464 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2464.xml">
+<!ENTITY RFC4861 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4861.xml">
+<!ENTITY RFC5942 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5942.xml">
+<!ENTITY RFC8174 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml">
+<!ENTITY RFC8200 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8200.xml">
+<!ENTITY RFC8201 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8201.xml">
+]>
+
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<?rfc strict="yes"
+      toc="yes"
+      tocdepth="4"
+      symrefs="yes"
+      sortrefs="yes"
+      compact="yes"
+      subcompact="no" ?>
+
+
+<rfc category="std"
+     docName="draft-kline-6man-pmo-00">
+    <front>
+        <title abbrev="IPv6 Path MTU Option">IPv6 Path MTU Option</title>
+
+        <author fullname="Erik Kline" initials="E." surname="Kline">
+            <organization>Loon LLC</organization>
+            <address>
+                <postal>
+                    <street>1600 Amphitheatre Parkway</street>
+                    <city>Mountain View</city>
+                    <region>California</region>
+                    <code>94043</code>
+                    <country>US</country>
+                </postal>
+                <email>ek@loon.com</email>
+            </address>
+        </author>
+
+        <date/>
+
+        <area>General</area>
+        <workgroup>Internet Engineering Task Force</workgroup>
+
+        <keyword>IPv6</keyword>
+        <keyword>RA</keyword>
+        <keyword>Router</keyword>
+        <keyword>Advertisement</keyword>
+        <keyword>Path</keyword>
+        <keyword>MTU</keyword>
+        <keyword>Path MTU</keyword>
+        <keyword>Option</keyword>
+
+        <abstract>
+            <t>
+This document describes an IPv6 Neighbor Discovery (ND) Path MTU Option (PMO)
+for inclusion in Router Advertisements (RAs). This allows some environments
+greater flexibility to support, for example, a higher MTU for on-link or
+intra-administrative-domain communications than for broader Internet
+communications.
+            </t>
+        </abstract>
+    </front>
+
+    <middle>
+        <section title="Introduction">
+            <t>
+This document describes an IPv6 Neighbor Discovery (ND) Path MTU Option (PMO)
+for inclusion in Router Advertisements (RAs). This allows some environments
+greater flexibility to support, for example, a higher MTU for on-link or
+intra-administrative-domain communications than for broader Internet
+communications.
+            </t>
+<!--
+            <t>
+In environments where on-link nodes do not communicate with one another,
+either by policy or by practice, setting the MTU option value to the path MTU
+value for all destinations through the advertising router is a practical
+measure. In other words, since there is no on-link communication of note,
+supporting higher MTUs for on-link destinations is of no operational value,
+especially when not doing so can burden hosts with endless Path MTU discovery.
+
+However, even in these environments there may be changes in Path MTU (e.g.
+a change in upstream provider to one with a lower MTU). It can still be
+operationally useful to separate the Path MTU from the on-link MTU.
+            </t>
+-->
+            <t>
+TBD: Explain why extending RFC4191 RIOs didn't look easy.
+            </t>
+            <t>TBD: more discussion</t>
+        </section>
+        <section title="Terminology">
+            <section title="Requirements Language">
+                <t>
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+"MAY", and "OPTIONAL" in this document are to be interpreted as
+described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/>
+when, and only when, they appear in all capitals, as shown here.
+                </t>
+            </section>
+            <section title="Summary of key terms">
+                <t>
+For the purposes of this document the following terms are used as described
+here.
+                </t>
+                <section anchor="link_mtu" title="Link MTU">
+                    <t>
+The MTU of the link (<xref target="RFC4861"/>); alternatively, the MTU as it
+would be determined were no
+<xref target="path_mtu_option">Path MTU Option</xref> present. This may be:
+                        <list style="hanging" hangIndent="3">
+                            <t>
+the value specified in an <xref target="mtu_option">MTU Option</xref>,
+                            </t>
+                            <t>
+a value specified in a separate document that covers operating IP over a
+particular link type (e.g., <xref target="RFC2464"/>), or
+                            </t>
+                            <t>
+a value derived by other means (e.g. administrative or a hint from a
+sub-IP layer mechanism).
+                            </t>
+                        </list>
+The Link MTU MUST be the initial Path MTU used when transmitting to any
+link-local destination.
+                    </t>
+                </section>
+                <section title="Path MTU">
+                    <t>
+TBD: Path MTU
+                    </t>
+                </section>
+                <section title="Path MTU Discovery">
+                    <t>
+TBD: Path MTU Discovery (cite <xref target="RFC8201"/>)
+                    </t>
+                </section>
+                <section anchor="mtu_option" title="MTU Option">
+                    <t>
+The MTU Option is defined in <xref target="RFC4861"/> section 4.6.4. In this
+documented it may also be referred to as the Link MTU Option, in order to
+disambiguate it from this the
+<xref target="path_mtu_option">Path MTU Option</xref>.
+                    </t>
+                </section>
+                <section anchor="path_mtu_option" title="Path MTU Option">
+                    <t>
+The IPv6 ND Path MTU Option is described in this document. It provides more
+explicit signaling of the best initial Path MTU value for a given set of
+destinations when sending via the advertising router.
+                    </t>
+                </section>
+            </section>
+        </section>
+        <section anchor="format" title="Path MTU Option Format">
+            <figure align="center">
+                <artwork align="left"><![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|     Type      |    Length     |     MTU #1 (upper 16 bits)    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|     MTU #1 (lower 16 bits)    | num prefixes  | prefix len #1 |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   prefix #1  ...                                              |
+.                                                               .
+.                                                               .
+.                                                               .
+|   ...                                                         |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                ]]>
+                </artwork>
+            </figure>
+
+            <texttable align="left" style="none">
+                <preamble>Fields:</preamble>
+                <ttcol></ttcol>
+                <ttcol></ttcol>
+                <ttcol></ttcol>
+                <c>Type</c><c>&nbsp;</c><c>TBD</c>
+
+                <c>&nbsp;</c><c>&nbsp;</c><c>&nbsp;</c>
+
+                <c>Length</c>
+                <c>&nbsp;</c>
+                <c>The length of the option in units of 8 octets.</c>
+
+                <c>&nbsp;</c><c>&nbsp;</c><c>&nbsp;</c>
+
+                <c>&nbsp;</c><c>&nbsp;</c><c>
+                When not set, the receiving node MUST NOT make any assumptions of exclusive
+                use of the specified Prefix, i.e. processing is unchanged from previous
+                standards behavior.
+                </c>
+
+                <c>&nbsp;</c><c>&nbsp;</c><c>&nbsp;</c>
+
+                <c>Option contents</c>
+                <c>&nbsp;</c>
+                <c>The contents of the option as described below.</c>
+            </texttable>
+            <t>
+The Path MTU Option contents are encoded as a repeated sequence of:
+                <list style="hanging" hangIndent="3">
+                    <t>4-octet MTU value</t>
+                    <t>1-octet number of prefixes</t>
+                    <t>sequence of prefixes to which this MTU applies</t>
+                </list>
+where each prefix is encoded as:
+                <list style="hanging" hangIndent="3">
+                    <t>1-octet prefix length</t>
+                    <t>variable length leading bits of prefix or IP address</t>
+                </list>
+Each sequence of octets representing a prefix uses only as many octets as
+required to by the prefix length (e.g. for a prefix length of 0: 0 octets are
+required, for prefix lengths 1 through 8: 1 octet is required, and so on).
+            </t>
+            <t>
+The option is padded with zero-valued octets to the 8 octet boundary as
+given by the option length.
+            </t>
+        </section>
+        <section anchor="processing" title="Option Processing Rules">
+            <t>
+Nodes compliant with this specification do not change their processing of
+RAs that contain no Path MTU Options. Additionally, for all Path MTU
+determination, an effective Path MTU learned via a Path MTU Discovery mechanism
+(<xref target="RFC8201"/>) MUST take precedence.
+            </t>
+            <t>
+Any IPv6 link-local prefixes listed within a Path MTU Option MUST be ignored
+by the receiver and SHOULD be logged for review by an administrator.
+            </t>
+            <t>
+Any MTU value lower than the IPv6 minimum MTU (i.e. 1280,
+<xref target="RFC8200"/> section 5), SHOULD be logged for administrator review
+as a configuration error and MUST be treated by the receiver as though the
+IPv6 minimum MTU had been the encoded value.
+            </t>
+            <t>
+The Link MTU MUST also be used for all on-link destinations, to maintain
+compatibility with existing behavior and expectations. For the same reason,
+the Link MTU SHOULD be used for destinations within any PIO prefix in the RA,
+even if the L bit is not set. As noted in <xref target="RFC5942"/>, a
+destination may at some time be learned to be on-link, and this information
+may expire or be changed.
+            </t>
+            <t>
+For all other destinations considered reachable via the option's advertising
+router, an initial Path MTU SHOULD be determined by first looking for a prefix
+that includes the destination in a Path MTU Option and using the corresponding
+MTU value.  If no such prefix exists, the Link MTU SHOULD be assumed to be the
+default.
+            </t>
+            <t>
+Note that as a matter of convenience a Path MTU Option may contain an entry
+for ::/0 even when the router lifetime is zero.  This in no way indicates
+that the router will function as a default gateway. Rather, it may be used,
+for example, to apply a Path MTU to all prefixes listed in a set of RIOs.
+            </t>
+        </section>
+        <section anchor="examples" title="Examples">
+            <t>TBD</t>
+            <t>
+<!--
+[1] RA MTU 1500
+    RA Path MTU
+      - 1422, 1, 0
+
+1500 on-link (fe80::/10, ff02::/16, and 2001:db8::/64),
+and 1422 for all other destinations.
+
+[2] RA MTU 9000
+    PIO 2001:db8:1:2::/64
+    RA Path MTU
+      - 1500, 1, 0,
+      - 9000, 1, 48, 2001:db8:1:::
+
+[3] RA MTU 1422
+    PIO 2001:db8:1:2::/64
+    RA Path MTU
+      - 9000, 2, 64, fe80::,
+                 64, 2001:db8:1:2::
+
+9k to 2001:db8:1::/48, fe80::/10, and ff02::/16
+1500 to ::/0
+-->
+            </t>
+        </section>
+        <section title="Security Considerations">
+            <t>TBD</t>
+        </section>
+    </middle>
+
+    <back>
+        <references title="Normative References">
+            &RFC2119;
+            &RFC4861;
+            &RFC8174;
+            &RFC8200;
+            &RFC8201;
+        </references>
+        <references title="Informative References">
+            &RFC2464;
+            &RFC5942;
+        </references>
+    </back>
+</rfc>
